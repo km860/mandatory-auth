@@ -7,11 +7,14 @@ import { AuthService } from './auth.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
+  user_credentials;
+  constructor(private authService: AuthService) {
+    this.user_credentials = {};
+  }
 
-  constructor(private authService: AuthService) {}
-
-  login() {
+  login(event) {
     // login user using authService.
+    this.authService.login(this.user_credentials);
   }
 
   logout() {

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import jwt_decode from 'jwt-decode';
+import * as jwt_decode from 'jwt-decode';
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
@@ -23,13 +23,21 @@ interface User {
 
 @Injectable()
 export class AuthService {
-
+  authResponse: AuthResponse =
+  {
+    token:
+    `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.
+    eyJzdWIiOiJtZUBkb21haW4uY29tIiwibmFtZSI6IkpvaG4gRG9lIn0.
+    UqiDgoUjS0J3N-_m9CrU-sJROig9fr25g6WyDoG76eQ`
+  };
   // the decoded token if the user has been authenticated, carrying information about the user.
-  _user: User;
+  _user: User; // = {sub: 'bb', name: 'jack'};
 
   // inject the HttpClient service.
   constructor(private http: HttpClient) {
     // perform any logic upon application startup here...
+  localStorage.setItem('token', JSON.stringify(this.authResponse));
+  // localStorage.setItem('credentials', JSON.stringify())
   }
 
   // ...
@@ -39,6 +47,10 @@ export class AuthService {
   }
 
   get authenticated() {
+    /* const user = JSON.stringify(this._user);
+    localStorage.setItem('User', JSON.stringify(this._user));
+    const decoded = jwt_decode(this.authResponse.token);
+    console.log(decoded);*/
     return this._user !== undefined;
   }
 
@@ -55,6 +67,7 @@ export class AuthService {
     //
     // Make sure to handle a successful authentication by storing and also decoding the returned token, as well as
     // catching http errors.
+    console.log(credentials);
 
     // return ...
     return;
