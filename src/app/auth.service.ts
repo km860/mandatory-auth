@@ -23,20 +23,14 @@ interface User {
 
 @Injectable()
 export class AuthService {
-  authResponse: AuthResponse =
-  {
-    token:
-    `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.
-    eyJzdWIiOiJtZUBkb21haW4uY29tIiwibmFtZSI6IkpvaG4gRG9lIn0.
-    UqiDgoUjS0J3N-_m9CrU-sJROig9fr25g6WyDoG76eQ`
-  };
+
   // the decoded token if the user has been authenticated, carrying information about the user.
   _user: User; // = {sub: 'bb', name: 'jack'};
 
   // inject the HttpClient service.
   constructor(private http: HttpClient) {
     // perform any logic upon application startup here...
-  localStorage.setItem('token', JSON.stringify(this.authResponse));
+   // localStorage.setItem('token', JSON.stringify(this.authResponse));
   // localStorage.setItem('credentials', JSON.stringify())
   }
 
@@ -68,9 +62,21 @@ export class AuthService {
     // Make sure to handle a successful authentication by storing and also decoding the returned token, as well as
     // catching http errors.
     console.log(credentials);
-
+    const urlAuth = '/api/auth';
+    this.http.post<AuthResponse>(urlAuth, credentials)
+      .subscribe(
+      (success) => {
+        console.log(jwt_decode(success));
+       // localStorage.setItem('token')
+        const data = jwt_decode(success);
+        this._user = data;
+      },
+      (error) => {
+        console.log(error.message, error.error);
+      });
+      return;
     // return ...
-    return;
+   // return this.http.post<AuthResponse>(urlAuth, credentials);
   }
 
   logout() {
