@@ -25,13 +25,11 @@ interface User {
 export class AuthService {
 
   // the decoded token if the user has been authenticated, carrying information about the user.
-  _user: User; // = {sub: 'bb', name: 'jack'};
+  _user: User;
 
   // inject the HttpClient service.
   constructor(private http: HttpClient) {
     // perform any logic upon application startup here...
-   // localStorage.setItem('token', JSON.stringify(this.authResponse));
-  // localStorage.setItem('credentials', JSON.stringify())
   }
 
   // ...
@@ -41,10 +39,6 @@ export class AuthService {
   }
 
   get authenticated() {
-    /* const user = JSON.stringify(this._user);
-    localStorage.setItem('User', JSON.stringify(this._user));
-    const decoded = jwt_decode(this.authResponse.token);
-    console.log(decoded);*/
     return this._user !== undefined;
   }
 
@@ -63,13 +57,15 @@ export class AuthService {
     // catching http errors.
     console.log(credentials);
     const urlAuth = '/api/auth';
-    this.http.post<AuthResponse>(urlAuth, credentials)
+    this.http.post(urlAuth, credentials)
       .subscribe(
       (success) => {
+        // console.log(success);
         console.log(jwt_decode(success));
        // localStorage.setItem('token')
         const data = jwt_decode(success);
         this._user = data;
+        localStorage.setItem('token', success.toString());
       },
       (error) => {
         console.log(error.message, error.error);
@@ -81,13 +77,19 @@ export class AuthService {
 
   logout() {
     // logout the current user by removing the corresponding token.
+    localStorage.removeItem('token');
   }
 
   getResource(resource): Observable<any> {
     // invoke a protected API route by including the Authorization header and return an Observable.
     //
     // If e.g. invoking /api/friends, the 'resource' parameter should equal 'friends'.
-
+    console.log(resource);
+    const headers = new HttpHeaders(`Authorization : Bearer ${resource}`);
+    this.http.get('api/friends', {headers: headers})
+      .subscribe((success) => {
+        console.log(success);
+      });
     // return ...
     return;
   }

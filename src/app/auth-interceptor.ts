@@ -3,6 +3,7 @@ import { HttpEvent, HttpInterceptor, HttpRequest, HttpResponse, HttpErrorRespons
 
 import { Observable } from 'rxjs/';
 import { of } from 'rxjs/observable/of';
+import { headersToString } from 'selenium-webdriver/http';
 
 // ...
 // Example of user credentials to match against incoming credentials.
@@ -59,6 +60,8 @@ export class AuthInterceptor implements HttpInterceptor {
             return makeError(401, 'Invalid user credentials');
         }
     } else if (url.endsWith('/friends')) {
+        console.log(headers);
+        return makeResponse(friends);
     }
     /* return Observable.of(new HttpResponse({
         status: 200,

@@ -6,7 +6,7 @@
   <!-- Complete this markup for showing the status bar correctly, 
     depending on whether or not the user is authenticated. -->
   <div class="status">
-    <span>User ID: {{ usernamn }}</span>
+    <span>User ID: {{ username }}</span>
     <button class="btn btn-sm" (click)="testApi()">Test API</button>
     <button *ngIf="authService.user" class="btn btn-sm" (click)="logout()">Logout</button>
   </div>
