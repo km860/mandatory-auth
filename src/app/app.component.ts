@@ -7,20 +7,15 @@ import { AuthService } from './auth.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  username;
   user_credentials;
+  friends;
   constructor(private authService: AuthService) {
     this.user_credentials = {};
-    this.username = '';
   }
 
   login(event) {
     // login user using authService.
     this.authService.login(this.user_credentials);
-    if (this.authService.user) {
-      this.username = this.authService.user.name;
-    }
-    console.log(this.username);
   }
 
   logout() {
@@ -28,7 +23,7 @@ export class AppComponent {
     this.authService.logout();
     this.authService._user = undefined;
     this.user_credentials = {};
-    this.username = '';
+    this.friends = undefined;
   }
 
   testApi() {
@@ -37,10 +32,12 @@ export class AppComponent {
       // console.log('item exists');
       const accesstoken = localStorage.getItem('token');
       // console.log(accesstoken);
-      this.authService.getResource(accesstoken);
+      this.authService.getResource(accesstoken).subscribe(response => {
+        console.log(response);
+        this.friends = response;
+      });
     } else {
       console.log('no token');
     }
-
   }
 }

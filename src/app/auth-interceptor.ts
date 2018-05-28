@@ -53,20 +53,22 @@ export class AuthInterceptor implements HttpInterceptor {
 
     if (url.endsWith('/auth')) {
         if (body.name === username && body.password === password) {
-            console.log('yes');
             return makeResponse(token);
         } else {
-            console.log('no');
             return makeError(401, 'Invalid user credentials');
         }
     } else if (url.endsWith('/friends')) {
-        console.log(headers);
-        return makeResponse(friends);
+        if (headers.has('Authorization')) {
+            console.log(headers.get('Authorization'));
+            if (headers.get('Authorization').endsWith(token) ) {
+                return makeResponse(friends);
+            } else {
+                return makeError(401, 'Unauthorized token');
+            }
+        } else {
+            return makeError(400, 'No authorization header');
+        }
     }
-    /* return Observable.of(new HttpResponse({
-        status: 200,
-        body: {name: 'niklas', id: 3},
-    })); */
     // implement logic for handling API requests, as defined in the exercise instructions.
 
   }

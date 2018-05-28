@@ -85,12 +85,17 @@ export class AuthService {
     //
     // If e.g. invoking /api/friends, the 'resource' parameter should equal 'friends'.
     console.log(resource);
-    const headers = new HttpHeaders(`Authorization : Bearer ${resource}`);
+    const options = {
+      headers: new HttpHeaders({
+        Authorization : `Bearer ${resource}`
+      })
+    };
+    /* const headers = new HttpHeaders(`Authorization : Bearer ${resource}`);
     this.http.get('api/friends', {headers: headers})
       .subscribe((success) => {
         console.log(success);
-      });
+      }); */
     // return ...
-    return;
+    return this.http.get('/friends', options);
   }
 }
